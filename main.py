@@ -201,7 +201,7 @@ def track_single_point(video_path, selection_frame_index_sec=3):
 
 if __name__ == "__main__":
     # Prompt user input
-    video_id = input("Enter video ID (e.g., 123): ").strip()
+    video_id = input("Enter video ID (e.g., 4130): ").strip()
     try:
         time_sec = float(input("Enter time (in seconds) for point selection: ").strip())
     except ValueError:
