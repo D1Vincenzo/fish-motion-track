@@ -200,4 +200,17 @@ def track_single_point(video_path, selection_frame_index_sec=3):
     plt.show()
 
 if __name__ == "__main__":
-    track_single_point("video2.MOV", selection_frame_index_sec=3)
+    # Prompt user input
+    video_id = input("Enter video ID (e.g., 123): ").strip()
+    try:
+        time_sec = float(input("Enter time (in seconds) for point selection: ").strip())
+    except ValueError:
+        print("Invalid time input. Please enter a number.")
+        exit()
+
+    video_path = f"DSC_{video_id}.MOV"
+    if not os.path.exists(video_path):
+        print(f"File not found: {video_path}")
+        exit()
+
+    track_single_point(video_path, selection_frame_index_sec=time_sec)
