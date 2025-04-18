@@ -208,7 +208,7 @@ if __name__ == "__main__":
         print("Invalid time input. Please enter a number.")
         exit()
 
-    video_path = f"DSC_{video_id}.MOV"
+    video_path = f"videos/DSC_{video_id}.MOV"
     if not os.path.exists(video_path):
         print(f"File not found: {video_path}")
         exit()
