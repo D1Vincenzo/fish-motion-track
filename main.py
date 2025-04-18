@@ -61,13 +61,24 @@ def compute_signed_angle(vec, ref_vec=np.array([-1, 0])):
     angle = np.arctan2(cross, dot)
     return np.degrees(angle)
 
-def track_single_point(video_path):
+def track_single_point(video_path, selection_frame_index_sec=3):
     global clicked_points
-
+    selection_frame_index = int(selection_frame_index_sec * 120)
+    
     cap = cv2.VideoCapture(video_path)
+    
+    # Skip to the desired frame for point selection
+    frame_count = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+    fps = cap.get(cv2.CAP_PROP_FPS)
+
+    if selection_frame_index >= frame_count:
+        print(f"Error: selection_frame_index {selection_frame_index} exceeds video length ({frame_count} frames)")
+        return
+
+    cap.set(cv2.CAP_PROP_POS_FRAMES, selection_frame_index)
     ret, first_frame = cap.read()
     if not ret:
-        print("Unable to read video.")
+        print("Failed to grab frame for point selection.")
         return
 
     video_basename = os.path.splitext(os.path.basename(video_path))[0]
@@ -181,6 +192,9 @@ def track_single_point(video_path):
     annotated_image = draw_selection_ui(first_frame, clicked_points)
     save_name = f"{video_basename}_selected_points.png"
     cv2.imwrite(save_name, annotated_image)
+    # ✅ Set the cap to the next frame for tracking
+    cap.set(cv2.CAP_PROP_POS_FRAMES, selection_frame_index + 1)
+
     print(f"✅ Saved selected points image: {save_name}")
 
     print(f"\n✅ CSV data export completed: {output_csv}")
@@ -202,4 +216,4 @@ def track_single_point(video_path):
     plt.show()
 
 if __name__ == "__main__":
-    track_single_point("video2.MOV")
+    track_single_point("video2.MOV", selection_frame_index_sec=3)
